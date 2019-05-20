@@ -1,0 +1,12 @@
+Analysis/
+*~
+__pycache__/
+PLOTS/
+FITS/
+Results/
+*.last
+*.log
+.directory
+Test/
+test.py
+
