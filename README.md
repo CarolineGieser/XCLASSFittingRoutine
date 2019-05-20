@@ -68,86 +68,86 @@ plot_continuum(): plot continuum and input positions
 
 ### functs.py
 
-make_directory(dirName): 
+make_directory(dirName):  
 create a subdirectory called 'dirName'
 
-workingdir(): 
-determine current directory, 
-return **working_dir**
+workingdir():  
+determine current directory,  
+return **working_dir**  
 
-rm_previous_fitting_results(): 
-remove previous fitting results
+rm_previous_fitting_results():  
+remove previous fitting results  
 
-setup_directory(delete_previous_results=False):
-creates all required directories
-if delete_previous_results=True: **all** previous fitting results will be removed!
+setup_directory(delete_previous_results=False):  
+creates all required directories  
+if delete_previous_results=True: **all** previous fitting results will be removed!  
 
-load_input_table():
-loads input from input.dat table
-return data_directory, do_error_estimation, channel1 , channel2
+load_input_table():  
+loads input from input.dat table  
+return data_directory, do_error_estimation, channel1 , channel2  
 
-load_regions_table():
-load input from regions.dat table
-return regions, regions_plot, distances, filenames
+load_regions_table():  
+load input from regions.dat table  
+return regions, regions_plot, distances, filenames  
 
-load_cores_table():
-load input from cores.dat table
-return cores, number, x_pix, y_pix, core_label
+load_cores_table():  
+load input from cores.dat table  
+return cores, number, x_pix, y_pix, core_label  
 
-load_molecules_table():
-load input from molecules.dat table
-return mol_name, mol_name_file
+load_molecules_table():  
+load input from molecules.dat table  
+return mol_name, mol_name_file  
 
-load_molecule_ranges_table():
-load input from molecule_ranges.dat table
-return mol_ranges_name, mol_ranges_low, mol_ranges_upp
+load_molecule_ranges_table():  
+load input from molecule_ranges.dat table  
+return mol_ranges_name, mol_ranges_low, mol_ranges_upp  
 
-check_error_estimation(do_error_estimation):
-check from input if error estimation should be performed or not
+check_error_estimation(do_error_estimation):  
+check from input if error estimation should be performed or not  
 
-determine_noise(data_directory, regions, filenames, cores, number, x_pix, y_pix,channel1,channel2):
-compute noise in a spectrum within a given channel range
-return std_line
+determine_noise(data_directory, regions, filenames, cores, number, x_pix, y_pix,channel1,channel2):  
+compute noise in a spectrum within a given channel range  
+return std_line  
 
-extract_spectrum_init(data_directory, regions, filenames, cores, number, x_pix, y_pix)
+extract_spectrum_init(data_directory, regions, filenames, cores, number, x_pix, y_pix)  
 
-create_XCLASS_molfits_file(cores, number,mol_name,mol_name_file,method)
+create_XCLASS_molfits_file(cores, number,mol_name,mol_name_file,method)  
 
-create_XCLASS_obsxml_file(data_directory,working_directory,regions,filenames,cores, number,mol_name,mol_name_file,mol_ranges_name, mol_ranges_low, mol_ranges_upp, do_error_estimation,method)
+create_XCLASS_obsxml_file(data_directory,working_directory,regions,filenames,cores, number,mol_name,mol_name_file,mol_ranges_name, mol_ranges_low, mol_ranges_upp, do_error_estimation,method)  
 
-carbon_12_13_ratio(d)
+carbon_12_13_ratio(d)  
 
-nitrogen_14_15_ratio(d)
+nitrogen_14_15_ratio(d)  
 
-oxygen_16_18_ratio(d)
+oxygen_16_18_ratio(d)  
 
-sulfur_32_34_ratio()
+sulfur_32_34_ratio()  
 
-create_XCLASS_isoratio_file(regions,data_directory,filenames,distances)
+create_XCLASS_isoratio_file(regions,data_directory,filenames,distances)  
 
-setup_XCLASS_files(data_directory, working_directory, regions, filenames, distances, cores, number, x_pix, y_pix, mol_name,mol_name_file,mol_ranges_name, mol_ranges_low, mol_ranges_upp,do_error_estimation):
+setup_XCLASS_files(data_directory, working_directory, regions, filenames, distances, cores, number, x_pix, y_pix, mol_name,mol_name_file,mol_ranges_name, mol_ranges_low, mol_ranges_upp,do_error_estimation):  
 	
-get_velocity_offset(cores, number)
+get_velocity_offset(cores, number)  
 
-extract_spectrum(data_directory, regions, filenames, cores, number, x_pix, y_pix, v_off,do_error_estimation)
+extract_spectrum(data_directory, regions, filenames, cores, number, x_pix, y_pix, v_off,do_error_estimation)  
 
-extract_properties(cores, number, x_pix, y_pix, v_off, std_line, data_directory)
+extract_properties(cores, number, x_pix, y_pix, v_off, std_line, data_directory)  
 
-rm_casa_files()
+rm_casa_files()  
 
-run_XCLASS_fit(data_directory, regions, filenames,cores, number, x_pix, y_pix,std_line,do_error_estimation,C18O_vlsr=True)
+run_XCLASS_fit(data_directory, regions, filenames,cores, number, x_pix, y_pix,std_line,do_error_estimation,C18O_vlsr=True)  
 
-extract_results(cores, number, mol_name_file,std_line,do_error_estimation)
+extract_results(cores, number, mol_name_file,std_line,do_error_estimation)  
 
-plot_results_cores(cores, number,do_error_estimation)
+plot_results_cores(cores, number,do_error_estimation)  
 
-plot_results_molecule(mol_name_file)
+plot_results_molecule(mol_name_file)  
 
-create_plots(cores, number, mol_name_file,std_line,do_error_estimation)
+create_plots(cores, number, mol_name_file,std_line,do_error_estimation)  
 
-plot_fit_residuals_optical_depth(cores, number,std_line)
+plot_fit_residuals_optical_depth(cores, number,std_line)  
 
-run_XCLASS_fit_all_fixed(data_directory,working_directory,regions, filenames,cores, number,mol_name,mol_name_file,mol_ranges_name, mol_ranges_low, mol_ranges_upp,std_line,do_error_estimation):
+run_XCLASS_fit_all_fixed(data_directory,working_directory,regions, filenames,cores, number,mol_name,mol_name_file,mol_ranges_name, mol_ranges_low, mol_ranges_upp,std_line,do_error_estimation):  
 	
 ### XCLASS_fit_VLSR_determination.py
 
