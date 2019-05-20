@@ -75,6 +75,7 @@ Multiple frequency ranges for a molecule are also possible!
 - rm_previous_fitting_results(): remove previous fitting results
 
 - setup_directory(delete_previous_results=False):
+
         creates all required directories
         if delete_previous_results=True: **all** previous fitting results will be removed!
 
