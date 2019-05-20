@@ -62,9 +62,11 @@ Multiple frequency ranges for a molecule are also possible!
 
 ### cont_functs.py
 
-determine_noise_continuum(): noise computation of the continuum data
+determine_noise_continuum():  
+  noise computation of the continuum data  
 
-plot_continuum(): plot continuum and input positions
+plot_continuum():  
+  plot continuum and input positions  
 
 ### functs.py
 
