@@ -7,7 +7,7 @@
 ## Required Packages
 *The routine has been tested successfully using the following packages:*
 
-- casa 5.4.0 (with python2 2.7.14)
+- casa 5.4.0 (with python 2.7.14)
 - python 3.6.5
 - XCLASS 1.2.5
 - numpy 1.16.3
@@ -31,8 +31,7 @@
 - third column: right ascension (J2000)
 - fourth column: declination (J2000)
 - fifth column: distance in kpc
-- sixth column: .fits filename of the region
-    **flux unit of the fits data cubes: Kelvin!**
+- sixth column: .fits filename of the region (**flux unit of the fits data cubes: Kelvin!**)
 
 **cores.dat**:
 *Table of selected positions within the regions*
@@ -63,8 +62,74 @@ Multiple frequency ranges for a molecule are also possible!
 
 ### cont_functs.py
 
+- determine_noise_continuum(): noise computation of the continuum data
+
+- plot_continuum(): plot continuum and input positions
+
 ### functs.py
 
+- make_directory(dirName): create a subdirectory called 'dirName'
+
+- workingdir(): determine current directory, return: working_dir
+ 
+- rm_previous_fitting_results(): remove previous fitting results
+
+- setup_directory(delete_previous_results=False):
+
+- load_input_table()
+
+- load_regions_table()
+
+- load_cores_table()
+
+load_molecules_table()
+
+load_molecule_ranges_table()
+
+check_error_estimation(do_error_estimation)
+
+determine_noise(data_directory, regions, filenames, cores, number, x_pix, y_pix,channel1,channel2)
+
+extract_spectrum_init(data_directory, regions, filenames, cores, number, x_pix, y_pix)
+
+create_XCLASS_molfits_file(cores, number,mol_name,mol_name_file,method)
+
+create_XCLASS_obsxml_file(data_directory,working_directory,regions,filenames,cores, number,mol_name,mol_name_file,mol_ranges_name, mol_ranges_low, mol_ranges_upp, do_error_estimation,method)
+
+carbon_12_13_ratio(d)
+
+nitrogen_14_15_ratio(d)
+
+oxygen_16_18_ratio(d)
+
+sulfur_32_34_ratio()
+
+create_XCLASS_isoratio_file(regions,data_directory,filenames,distances)
+
+setup_XCLASS_files(data_directory, working_directory, regions, filenames, distances, cores, number, x_pix, y_pix, mol_name,mol_name_file,mol_ranges_name, mol_ranges_low, mol_ranges_upp,do_error_estimation):
+	
+get_velocity_offset(cores, number)
+
+extract_spectrum(data_directory, regions, filenames, cores, number, x_pix, y_pix, v_off,do_error_estimation)
+
+extract_properties(cores, number, x_pix, y_pix, v_off, std_line, data_directory)
+
+rm_casa_files()
+
+run_XCLASS_fit(data_directory, regions, filenames,cores, number, x_pix, y_pix,std_line,do_error_estimation,C18O_vlsr=True)
+
+extract_results(cores, number, mol_name_file,std_line,do_error_estimation)
+
+plot_results_cores(cores, number,do_error_estimation)
+
+plot_results_molecule(mol_name_file)
+
+create_plots(cores, number, mol_name_file,std_line,do_error_estimation)
+
+plot_fit_residuals_optical_depth(cores, number,std_line)
+
+run_XCLASS_fit_all_fixed(data_directory,working_directory,regions, filenames,cores, number,mol_name,mol_name_file,mol_ranges_name, mol_ranges_low, mol_ranges_upp,std_line,do_error_estimation):
+	
 ### XCLASS_fit_VLSR_determination.py
 
 ### XCLASS_fit.py
