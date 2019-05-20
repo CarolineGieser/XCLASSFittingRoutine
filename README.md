@@ -1,11 +1,16 @@
 # XCLASS Fitting Routine
 
 ## Description
-- automatically performs XCLASS Fit on spectra from a given sample and given molecules
+automatically performs XCLASS Fit on spectra from a given sample and given molecules  
 
-- **execute routine with "python3 run.py" in terminal**
+**execute routine with "python3 run.py" in terminal**  
+- for each given position spectra are extracted and the noise is computed in a give line-free channel range
 
 - the correct systemic velocity is determined by fitting the C18O line first
+
+- XCLASS is executed for all given molecules
+
+- a fit is considered as "good" if the modeled flux has a peak flux > 5*noise
 
 - error estimation: spectra are scaled by +- 20% and fitted with the same method; for each parameter the error is computed by the mean standard deviation from the best-fit value
 
