@@ -31,4 +31,3 @@ fc.create_plots(cores, number, mol_name_file,std_line,do_error_estimation)
 
 #fc.run_XCLASS_fit_all_fixed(data_directory,working_directory,regions, filenames,cores, number,mol_name,mol_name_file,mol_ranges_name, mol_ranges_low, mol_ranges_upp,std_line,do_error_estimation)
 
-
