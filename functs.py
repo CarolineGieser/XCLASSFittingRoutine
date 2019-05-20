@@ -8,6 +8,7 @@ import matplotlib.pyplot as plt
 from astropy.coordinates import SkyCoord
 from astropy.wcs import WCS
 from matplotlib.ticker import MultipleLocator
+from numba import jit
 
 ###---plotting parameters---###
 params = {'font.family' : 'serif',
@@ -107,9 +108,10 @@ def load_regions_table():
 	regions = regions_tab[:,0].astype(np.str) #CORE region name
 	regions_plot = regions_tab[:,1].astype(np.str) #CORE region name for plotting
 	distances = regions_tab[:,2].astype(np.float) #Distance (kpc)
-	filenames = regions_tab[:,3].astype(np.str) #filenames
+	filenames = regions_tab[:,3].astype(np.str) #fits filenames of spectral line datacubes
+	filenames_continuum = regions_tab[:,4].astype(np.str) #fits filenames of continuum data
 	
-	return regions, regions_plot, distances, filenames
+	return regions, regions_plot, distances, filenames, filenames_continuum
 
 
 def load_cores_table():
@@ -156,6 +158,7 @@ def check_error_estimation(do_error_estimation):
 		print('Only yes and no are allowed for do_error_estimation parameter in input.dat!')
 	return tag
 	
+@jit
 def determine_noise(data_directory, regions, filenames, cores, number, x_pix, y_pix,channel1,channel2):
 	### compute noise in each spectrum in a line-free channel range
 	
@@ -626,44 +629,6 @@ def extract_spectrum(data_directory, regions, filenames, cores, number, x_pix, y
 			np.savetxt('FITS/spectrum_' + str(cores[j]) + '_' + str(number[j]) + tag[2] +'.dat', np.c_[sub_cube.spectral_axis.value/(1.0 - (vlsr_core/c)),sub_cube.value*1.2])
 		
 		print('Extracted ' + str(cores[j]) + ' ' + str(number[j]) + ' Spectrum (spectral axis corrected for systemic velocity)!')
-		
-		
-def extract_properties(cores, number, x_pix, y_pix, v_off, std_line, data_directory):
-	###create a summary table with properties of the continuum and line data
-	
-	#empty coordinate array
-	coordinates = np.zeros(cores.size).astype(np.str)
-	#empty continuum peak flux
-	S_peak = np.zeros(cores.size)
-	#empty systemic velocity array
-	vlsr_cores = np.zeros(cores.size)
-	#empty continuum noise array
-	std_continuum = np.zeros(cores.size)
-	
-	#loop over all cores
-	for j in range(cores.size):
-		
-		#load continuum data
-		hdu = fits.open(data_directory + 'cont_' + cores[j] + '_1mm_selfcal.fits')[0]
-		flux = hdu.data[0,:,:] # in Jy/beam
-		wcs = WCS(hdu.header, naxis=['longitude', 'latitude'])
-		
-		#compute core systemic velocity
-		vlsr = (hdu.header['VELO-LSR'] / 1000.0) #km/s
-		vlsr_cores[j] = vlsr + v_off[j] #km/s
-		
-		#compute standard deviation
-		std_continuum[j] = np.around(np.std(flux)*1000.0, decimals=2) #mJy/beam
-		
-		#extract continuum flux at core position
-		S_peak[j] = flux[y_pix[j],x_pix[j]] * 1000.0 #mJy/beam
-		
-		#extract coordinates at core position (declination and right ascension)
-		lon, lat = wcs.all_pix2world(x_pix[j], y_pix[j],0)
-		coordinates[j] = SkyCoord(ra=lon*u.degree, dec=lat*u.degree).to_string('hmsdms', precision=2)
-		
-	np.savetxt('Results/Properties.dat', np.c_[cores,number,coordinates, vlsr_cores, S_peak, std_continuum, std_line], delimiter=' ', fmt='%s', header='Region CoreNumber RA DEC VLSR[km/s] S_Peak_cont[mJy/beam] std_cont[mJy/beam] std_line[K]') 
-	print('Extracted summary table!')
 	
 	
 def rm_casa_files():
@@ -699,10 +664,7 @@ def run_XCLASS_fit(data_directory, regions, filenames,cores, number, x_pix, y_pi
 	os.system('casa -c XCLASS_fit.py')
 	rm_casa_files()
 	
-	#compute summary table with line and continuum data properties
-	extract_properties(cores, number, x_pix, y_pix, v_off, std_line, data_directory)
-	
-
+@jit
 def extract_results(cores, number, mol_name_file,std_line,do_error_estimation):
 	###extract best fit parameters from .molfit files
 	
@@ -1124,5 +1086,5 @@ def run_XCLASS_fit_all_fixed(data_directory,working_directory,regions, filenames
 	os.system('casa -c XCLASS_optical_depth.py')
 	rm_casa_files()
 	
-	plot_fit_residuals_optical_depth(cores, number,std_line)
+	#plot_fit_residuals_optical_depth(cores, number,std_line)
 	

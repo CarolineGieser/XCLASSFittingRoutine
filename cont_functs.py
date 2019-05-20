@@ -28,11 +28,8 @@ params = {'font.family' : 'serif',
           'mathtext.default': 'regular', 
 			}
 
-ticklength = 7.0 #for 2d maps
-plt.rcParams.update(params)
-
 data_directory, do_error_estimation, channel1 , channel2 = fc.load_input_table()
-regions, regions_plot, distances, filenames = fc.load_regions_table()
+regions, regions_plot, distances, filenames, filenames_continuum = fc.load_regions_table()
 cores, number, x_pix, y_pix, core_label = fc.load_cores_table()
 
 def determine_noise_continuum():
@@ -42,7 +39,7 @@ def determine_noise_continuum():
 	for i in range(regions.size):
 		
 		#Open continuum fits file
-		hdu = fits.open(data_directory + 'cont_' + regions[i] + '_1mm_selfcal.fits')[0]
+		hdu = fits.open(data_directory + filenames_continuum[i])[0]
 		
 		#Extract flux 
 		flux = hdu.data[0,:,:]*1000.0 #mJy/beam
@@ -55,12 +52,16 @@ def determine_noise_continuum():
 	
 def plot_continuum():
 	
+	#plotting parameters
+	ticklength = 7.0 #for 2d maps
+	plt.rcParams.update(params)
+	
 	noise_continuum = determine_noise_continuum()
 	
 	for i in range(regions.size):
 		
 		#Open continuum fits file
-		hdu = fits.open(data_directory + 'cont_' + regions[i] + '_1mm_selfcal.fits')[0]
+		hdu = fits.open(data_directory + filenames_continuum[i])[0]
 		
 		#Extract flux and coordinate axis
 		flux = hdu.data[0,:,:]*1000.0 # in Jy/beam

@@ -3,6 +3,18 @@
 ## Description
 - automatically performs XCLASS Fit on spectra from a given sample and given molecules
 
+- **execute routine with "python3 run.py" in terminal**
+
+- the correct systemic velocity is determined by fitting the C18O line first
+
+- error estimation: spectra are scaled by +- 20% and fitted with the same method; for each parameter the error is computed by the mean standard deviation from the best-fit value
+
+- the FITS/ folder contains all extracted spectra and XCLASS input and output files
+
+- the PLOTS/ folder contains plots of the continuum in CONTINUUM/, systemic velocity determination in VLSR/, good XCLASS fits in GOODFIT/, bad XCLASS fits in BADFIT/
+
+- results (XCLASS fitting parameters, barchart and histogram plots) are stored in RESULTS/
+
 
 ## Required Packages
 *The routine has been tested successfully using the following packages:*
@@ -32,7 +44,8 @@ flux unit of the fits data cubes: Kelvin!
 - third column: right ascension (J2000) 
 - fourth column: declination (J2000)
 - fifth column: distance in kpc (var: **distances**)
-- sixth column: .fits filename of the region (var: **filenames**)
+- sixth column: .fits filename of the spectral line data of the region (var: **filenames**)
+- seventh column: .fits filename of the continuum data of the region (var: **filenames_continuum**)
 
 **cores.dat**:
 *Table of selected positions within the regions*

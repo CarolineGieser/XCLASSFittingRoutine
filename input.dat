@@ -1,5 +1,5 @@
 #directory where fits datacubes (flux unit: K!) are stored
-data_directory /home/gieser/Work_PhD/CORESample/DATA/ 
+data_directory ../CORESample/DATA/ 
 #error estimation for XCLASS fit parameters? (yes/no)
 do_error_estimation yes 
 #line free channel range in which noise is determined in each spectrum [start:stop]
