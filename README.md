@@ -31,6 +31,7 @@ automatically performs XCLASS Fit on spectra from a given sample and given molec
 - astropy (python3: 3.1.2; python2: 2.0.12)
 - spectralcube 0.4.4
 - matplotlib 3.0.3
+- numba 0.43.1
 
 
 ## Required Input
