@@ -11,7 +11,7 @@ from matplotlib.ticker import MultipleLocator
 
 ###---plotting parameters---###
 params = {'font.family' : 'serif',
-			 'font.size' : 12,
+			 'font.size' : 7,
 			 'errorbar.capsize' : 3,
 			 'lines.linewidth'   : 1.0,
 			 'xtick.top' : True,
@@ -541,6 +541,9 @@ def setup_XCLASS_files(data_directory, working_directory, regions, filenames, di
 def get_velocity_offset(cores, number):
 	### extract bestfit systemic velocity and plot fitted C18O line
 	
+	#set plot parameters
+	plt.rcParams.update(params)
+	
 	noise = np.loadtxt('Results/Noise.dat',usecols=2)
 	
 	#array in which v_off values are stored
@@ -703,6 +706,9 @@ def run_XCLASS_fit(data_directory, regions, filenames,cores, number, x_pix, y_pi
 def extract_results(cores, number, mol_name_file,std_line,do_error_estimation):
 	###extract best fit parameters from .molfit files
 	
+	##set plot parameters
+	plt.rcParams.update(params)
+	
 	#create empty best fit parameter arrays
 	Theta_source = np.zeros(shape=(mol_name_file.size,cores.size))
 	T = np.zeros(shape=(mol_name_file.size,cores.size))
@@ -848,9 +854,6 @@ def plot_results_cores(cores, number,do_error_estimation):
 	### plot results for temperature, column density, linewidth and velocity offset for each core
 	
 	#set plot parameters
-	params = {
-				'font.size' : 7,
-			}
 	plt.rcParams.update(params)
 	
 	#loop over all cores
@@ -935,9 +938,6 @@ def plot_results_molecule(mol_name_file):
 	### plot histogram for temperature, column density, linewidth and velocity offset for each molecule
 	
 	#set plot parameters
-	params = {
-				'font.size' : 7,
-			}
 	plt.rcParams.update(params)
 	
 	#loop over all molecules
@@ -997,9 +997,6 @@ def plot_fit_residuals_optical_depth(cores, number,std_line):
 	###plot observed spectrum + fit, residuals and optical depth
 	
 	#plotting parameters
-	params = {
-				 'font.size' : 6,
-				}
 	plt.rcParams.update(params)
 	
 		
