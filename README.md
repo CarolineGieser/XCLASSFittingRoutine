@@ -1,10 +1,10 @@
 # XCLASS Fitting Routine
 
-##Description
+## Description
 
-##Required Packages
+## Required Packages
 
-##Required Input
+## Required Input
 **input.dat**:
 
 **regions.dat**:
@@ -17,16 +17,16 @@
 
 
 
-##Functions
+## Functions
 
-###cont_functs.py
+### cont_functs.py
 
-###functs.py
+### functs.py
 
-###XCLASS_fit_VLSR_determination.py
+### XCLASS_fit_VLSR_determination.py
 
-###XCLASS_fit.py
+### XCLASS_fit.py
 
-###XCLASS_fit_Results_all.py
+### XCLASS_fit_Results_all.py
 
-###run.py
+### run.py
