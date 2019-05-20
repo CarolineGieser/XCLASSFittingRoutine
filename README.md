@@ -68,30 +68,46 @@ plot_continuum(): plot continuum and input positions
 
 ### functs.py
 
-make_directory(dirName): create a subdirectory called 'dirName'
+make_directory(dirName): 
+create a subdirectory called 'dirName'
 
-workingdir(): determine current directory, return: working_dir
- 
-rm_previous_fitting_results(): remove previous fitting results
+workingdir(): 
+determine current directory, 
+return **working_dir**
+
+rm_previous_fitting_results(): 
+remove previous fitting results
 
 setup_directory(delete_previous_results=False):
+creates all required directories
+if delete_previous_results=True: **all** previous fitting results will be removed!
 
-    creates all required directories
-    if delete_previous_results=True: **all** previous fitting results will be removed!
+load_input_table():
+loads input from input.dat table
+return data_directory, do_error_estimation, channel1 , channel2
 
-load_input_table()
+load_regions_table():
+load input from regions.dat table
+return regions, regions_plot, distances, filenames
 
-load_regions_table()
+load_cores_table():
+load input from cores.dat table
+return cores, number, x_pix, y_pix, core_label
 
-load_cores_table()
+load_molecules_table():
+load input from molecules.dat table
+return mol_name, mol_name_file
 
-load_molecules_table()
+load_molecule_ranges_table():
+load input from molecule_ranges.dat table
+return mol_ranges_name, mol_ranges_low, mol_ranges_upp
 
-load_molecule_ranges_table()
+check_error_estimation(do_error_estimation):
+check from input if error estimation should be performed or not
 
-check_error_estimation(do_error_estimation)
-
-determine_noise(data_directory, regions, filenames, cores, number, x_pix, y_pix,channel1,channel2)
+determine_noise(data_directory, regions, filenames, cores, number, x_pix, y_pix,channel1,channel2):
+compute noise in a spectrum within a given channel range
+return std_line
 
 extract_spectrum_init(data_directory, regions, filenames, cores, number, x_pix, y_pix)
 
