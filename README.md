@@ -62,28 +62,28 @@ Multiple frequency ranges for a molecule are also possible!
 
 ### cont_functs.py
 
-- determine_noise_continuum(): noise computation of the continuum data
+determine_noise_continuum(): noise computation of the continuum data
 
-- plot_continuum(): plot continuum and input positions
+plot_continuum(): plot continuum and input positions
 
 ### functs.py
 
-- make_directory(dirName): create a subdirectory called 'dirName'
+make_directory(dirName): create a subdirectory called 'dirName'
 
-- workingdir(): determine current directory, return: working_dir
+workingdir(): determine current directory, return: working_dir
  
-- rm_previous_fitting_results(): remove previous fitting results
+rm_previous_fitting_results(): remove previous fitting results
 
-- setup_directory(delete_previous_results=False):
+setup_directory(delete_previous_results=False):
 
-        creates all required directories
-        if delete_previous_results=True: **all** previous fitting results will be removed!
+    creates all required directories
+    if delete_previous_results=True: **all** previous fitting results will be removed!
 
-- load_input_table()
+load_input_table()
 
-- load_regions_table()
+load_regions_table()
 
-- load_cores_table()
+load_cores_table()
 
 load_molecules_table()
 
