@@ -80,34 +80,35 @@ remove previous fitting results
 
 setup_directory(delete_previous_results=False):  
 creates all required directories  
-if delete_previous_results=True: **all** previous fitting results will be removed!  
+WARNING: if delete_previous_results=True: all previous fitting results will be removed!  
 
 load_input_table():  
 loads input from input.dat table  
-return data_directory, do_error_estimation, channel1 , channel2  
+return **data_directory**, **do_error_estimation**, **channel1** , **channel2**  
 
 load_regions_table():  
 load input from regions.dat table  
-return regions, regions_plot, distances, filenames  
+return **regions**, **regions_plot**, **distances**, **filenames**  
 
 load_cores_table():  
 load input from cores.dat table  
-return cores, number, x_pix, y_pix, core_label  
+return **cores**, **number**, **x_pix**, **y_pix**, **core_label**  
 
 load_molecules_table():  
 load input from molecules.dat table  
-return mol_name, mol_name_file  
+return **mol_name**, **mol_name_file**  
 
 load_molecule_ranges_table():  
 load input from molecule_ranges.dat table  
-return mol_ranges_name, mol_ranges_low, mol_ranges_upp  
+return **mol_ranges_name**, **mol_ranges_low**, **mol_ranges_upp**  
 
 check_error_estimation(do_error_estimation):  
 check from input if error estimation should be performed or not  
+return **tag**
 
 determine_noise(data_directory, regions, filenames, cores, number, x_pix, y_pix,channel1,channel2):  
 compute noise in a spectrum within a given channel range  
-return std_line  
+return **std_line**  
 
 extract_spectrum_init(data_directory, regions, filenames, cores, number, x_pix, y_pix)  
 
