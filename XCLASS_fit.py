@@ -15,6 +15,7 @@ number = cores_tab[:,1].astype(np.int)
 mol_data=np.loadtxt('molecules.dat', dtype='U', comments='%')
 mol_name_file=mol_data[:,1] #plotted molecule label
 
+
 input_tab=np.loadtxt('input.dat', dtype='U', comments='#').astype(np.str)
 do_error_estimation = input_tab[1,1]
 

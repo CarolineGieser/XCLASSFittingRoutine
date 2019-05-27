@@ -32,6 +32,7 @@ data_directory, do_error_estimation, channel1 , channel2 = fc.load_input_table()
 regions, regions_plot, distances, filenames, filenames_continuum = fc.load_regions_table()
 cores, number, x_pix, y_pix, core_label = fc.load_cores_table()
 
+
 def determine_noise_continuum():
 	
 	noise_continuum = np.zeros(regions.size)

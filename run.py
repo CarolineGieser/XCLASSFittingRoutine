@@ -10,38 +10,41 @@ cores, number, x_pix, y_pix, core_label = fc.load_cores_table()
 mol_name, mol_name_file, mol_name_MUSCLE, mol_name_plot = fc.load_molecules_table()
 mol_ranges_name, mol_ranges_low, mol_ranges_upp = fc.load_molecule_ranges_table()
 
+
 #setup working directory
 working_directory = fc.setup_directory(delete_previous_results=False)
 
 #continuum plots
-#contfc.plot_continuum()
+contfc.plot_continuum()
 
 #determine noise in spectra
-#std_line = fc.determine_noise(data_directory, regions, filenames, cores, number, x_pix, y_pix,channel1,channel2)
+std_line = fc.determine_noise(data_directory, regions, filenames, cores, number, x_pix, y_pix,channel1,channel2)
 
 #extract spectra
-#fc.extract_spectrum_init(data_directory, regions, filenames, cores, number, x_pix, y_pix)
+fc.extract_spectrum_init(data_directory, regions, filenames, cores, number, x_pix, y_pix)
 	
 #create XCLASS input files
-#fc.setup_XCLASS_files(data_directory, working_directory, regions, filenames, distances, cores, number, x_pix, y_pix, mol_name,mol_name_file,mol_ranges_name, mol_ranges_low, mol_ranges_upp, do_error_estimation)
+fc.setup_XCLASS_files(data_directory, working_directory, regions, filenames, distances, cores, number, x_pix, y_pix, mol_name,mol_name_file,mol_ranges_name, mol_ranges_low, mol_ranges_upp, do_error_estimation)
 
 #run XCLASS Fit
-#fc.run_XCLASS_fit(data_directory, regions, filenames,cores, number, x_pix, y_pix,std_line,do_error_estimation,C18O_vlsr=True)
+fc.run_XCLASS_fit(data_directory, regions, filenames,cores, number, x_pix, y_pix,std_line,do_error_estimation,C18O_vlsr=True)
 
 #extract fit results and plot results
-#fc.create_plots(cores, number, mol_name_file,std_line,do_error_estimation)
+fc.create_plots(cores, number, mol_name_file,std_line,do_error_estimation)
 
-#fc.run_XCLASS_fit_all_fixed(data_directory,working_directory,regions, filenames,cores, number,mol_name,mol_name_file,mol_ranges_name, mol_ranges_low, mol_ranges_upp,std_line,do_error_estimation)
+#compute total fit spectrum
+fc.run_XCLASS_fit_all_fixed(data_directory,working_directory,regions, filenames,cores, number,mol_name,mol_name_file,mol_ranges_name, mol_ranges_low, mol_ranges_upp,std_line,do_error_estimation)
 
-#compute H2 column density and mass
-#T_kin, N_H2, M = fc.determine_H2_col_dens(data_directory,regions,distances,cores,number,x_pix, y_pix)
+#compute H2 column density and mass from continuum
+T_kin, N_H2, M = fc.determine_H2_col_dens(data_directory,regions,distances,cores,number,x_pix, y_pix)
 
 #create MUSCLE input files
-#fc.create_MUSCLE_input(data_directory,regions, distances, filenames, cores, number, mol_name_MUSCLE,N_H2)
+fc.create_MUSCLE_input(data_directory,regions, distances, filenames, cores, number, mol_name_MUSCLE,N_H2)
 
-#fc.plot_fit_residuals_optical_depth(cores, number, std_line)
-#fc.plot_fit_residuals_optical_depth(np.array(['G139_9091']), np.array([1]), np.array([0.5]))
+#create plot with observed + fitted spectrum, residuals, and optical depth
+fc.plot_fit_residuals_optical_depth(cores, number, std_line)
 
+#create plot with observed + fitted spectrum
 fc.plot_fit(cores, number)
 
 

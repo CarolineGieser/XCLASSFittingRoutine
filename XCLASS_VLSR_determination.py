@@ -9,6 +9,7 @@ cores_tab=np.loadtxt('cores.dat', dtype='U', comments='#')
 cores = cores_tab[:,0].astype(np.str)
 number = cores_tab[:,1].astype(np.int)
 
+
 #loop over all cores
 for j in range(cores.size):
 	

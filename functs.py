@@ -82,7 +82,6 @@ def setup_directory(delete_previous_results=False):
 	make_directory(dirName='PLOTS/GOODFIT')
 	make_directory(dirName='PLOTS/VLSR')
 	make_directory(dirName='PLOTS/CONTINUUM')
-	make_directory(dirName='PLOTS/SPECTRA_LINEID')
 	make_directory(dirName='Results')
 	
 	print('Working directory: ' + working_directory)
@@ -1222,8 +1221,6 @@ def create_MUSCLE_input(data_directory,regions, distances, filenames, cores, num
 		#extract distance
 		d = d_to_GC[mask_reg]
 		ratio = oxygen_16_18_ratio(d)
-		print(cores[j] + ' ' + str(number[j]))
-		print(ratio)
 		
 		#load datacube
 		hdu = fits.open(data_directory + filenames[mask_reg])[0]
