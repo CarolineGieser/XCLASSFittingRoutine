@@ -43,7 +43,8 @@ automatically performs XCLASS Fit on spectra from a given sample and given molec
 - fourth column: channel where noise computation should stop (var: **channel2**)
 
 **regions.dat**:  
-*Table of regions*    
+*Table of regions*  
+more than 1 entry is required (just copy line if only 1 region is analyzed!)
 flux unit of the fits data cubes: Kelvin!  
 - first column: region name which will be used for file names (var: **regions**)
 - second column: latex format of region name which will be used in plots (var: **regions_plot**)
@@ -55,6 +56,7 @@ flux unit of the fits data cubes: Kelvin!
 
 **cores.dat**:
 *Table of selected positions within the regions*
+more than 1 position is required!
 - first column: region (var: **cores**)
 - second column: give each position in the region a number (var: **number**)
 - third column: right ascension in pixel units (var: **x_pix**)
@@ -63,6 +65,7 @@ flux unit of the fits data cubes: Kelvin!
 
 **molecules.dat**:
 *Table of molecules to be fitted with XCLASS*
+more than 1 molecule is required!
 - first column: XCLASS label of the molecule (var: **mol_name**)
 - second column: molecule label which will be used for file names (var: **mol_name_file**)
 - third column: MUSCLE label which will be used for computing the model input
