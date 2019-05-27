@@ -134,8 +134,10 @@ def load_molecules_table():
 	
 	mol_name=mol_data[:,0] #XCLASS molecule label
 	mol_name_file=mol_data[:,1] #filename molecule label
+	mol_name_MUSCLE=mol_data[:,2] #MUSCLE molecule label
+	mol_name_plot=mol_data[:,3] #plot molecule label
 	
-	return mol_name, mol_name_file
+	return mol_name, mol_name_file, mol_name_MUSCLE, mol_name_plot
 	
 	
 def load_molecule_ranges_table():
@@ -505,6 +507,8 @@ def sulfur_32_34_ratio():
 def create_XCLASS_isoratio_file(regions,data_directory,filenames,distances):
 	### create input iso-ratio files for XCLASS fitting
 	
+	d_to_GC_arr = np.zeros(regions.size)
+	
 	#loop over all regions
 	for s in range(regions.size):
 		
@@ -518,6 +522,7 @@ def create_XCLASS_isoratio_file(regions,data_directory,filenames,distances):
 		
 		#compute distance from region to Galactic Center
 		d_to_GC = source_coords.separation_3d(GC_coords).value
+		d_to_GC_arr[s] = d_to_GC
 
 		#open and write iso-ratio file
 		file = open('FITS/isotopologues_' + str(regions[s]) + '.dat','w')
@@ -531,6 +536,7 @@ S-34-O2;v=0;	SO2;v=0;	""" + str(sulfur_32_34_ratio())
 		)
 		file.close()
 	print('Created iso-ratio files!') 
+	np.savetxt('Results/GalacticDistances.dat', np.c_[regions,d_to_GC_arr], delimiter=' ', fmt='%s')
 	
 def setup_XCLASS_files(data_directory, working_directory, regions, filenames, distances, cores, number, x_pix, y_pix, mol_name,mol_name_file,mol_ranges_name, mol_ranges_low, mol_ranges_upp,do_error_estimation):
 	
@@ -890,7 +896,7 @@ def plot_results_cores(cores, number,do_error_estimation):
 		plt.ylabel('Velocity Offset [km s$^{-1}$]')
 		plt.subplots_adjust(wspace=0.3, hspace=0.05)
 		plt.xticks(x, molecule, rotation='vertical')
-		plt.savefig('Results/Bartchart_' + str(cores[j]) + '_' + str(number[j]) + '.pdf', format='pdf', bbox_inches='tight')
+		plt.savefig('Results/Barchart_' + str(cores[j]) + '_' + str(number[j]) + '.pdf', format='pdf', bbox_inches='tight')
 		plt.close()
 		
 	print('Created barchart plot for each core!')
@@ -967,15 +973,22 @@ def plot_fit_residuals_optical_depth(cores, number,std_line):
 		
 		#load table with line properties	
 		trans_tab =np.loadtxt('Results/' + str(cores[j]) + '_' + str(number[j]) + '_transition_energies.dat',dtype='U',comments='%')
-		print(trans_tab)
-		freq = trans_tab[:,0].astype(np.float)/1000.0 #GHz
-		molec = trans_tab[:,7].astype(np.str) #Molecule label
-		intensity = trans_tab[:,2].astype(np.float)
+		if trans_tab.ndim > 1:
+			freq = trans_tab[:,0].astype(np.float)/1000.0 #GHz
+			molec = trans_tab[:,7].astype(np.str) #Molecule label
+			intensity = trans_tab[:,2].astype(np.float)
+			
+			#mask out nonfitted lines
+			mask = np.where(intensity > 5.0*std_line[j])
+			freq = freq[mask]
+			molec = molec[mask]
+			
+		else:
+			freq = np.array(trans_tab[0].astype(np.float)/1000.0) #GHz
+			molec = np.array(trans_tab[7].astype(np.str)) #Molecule label
+			intensity = np.array(trans_tab[2].astype(np.float))
 		
-		#mask out nonfitted lines
-		mask = np.where(intensity > 0.0)
-		freq = freq[mask]
-		molec = molec[mask]
+
 		
 		#get list of files
 		listOfFiles = os.listdir('Results/')  
@@ -1063,10 +1076,13 @@ def plot_fit_residuals_optical_depth(cores, number,std_line):
 		plt.legend(loc='upper left')
 		
 		#label fitted lines
-		counter = 0
-		for i in range(0, freq.size):
-			plt.annotate(molec[i], xy=(freq[i], 0.0), xytext=(freq[i], np.amax(tau_dat)*4.5), arrowprops=dict(arrowstyle='-', relpos=(0,0),alpha=0.1, color='blue',linewidth=0.5), fontsize=3, rotation = 90, alpha=1.0, color='blue')
+		if trans_tab.ndim > 1:
+			for i in range(0, freq.size):
+				plt.annotate(molec[i], xy=(freq[i], 0.0), xytext=(freq[i], np.amax(tau_dat)*4.5), arrowprops=dict(arrowstyle='-', relpos=(0,0),alpha=0.1, color='blue',linewidth=0.5), fontsize=3, rotation = 90, alpha=1.0, color='blue')
+		else:
+			plt.annotate(molec, xy=(freq, 0.0), xytext=(freq, np.amax(tau_dat)*4.5), arrowprops=dict(arrowstyle='-', relpos=(0,0),alpha=0.1, color='blue',linewidth=0.5), fontsize=3, rotation = 90, alpha=1.0, color='blue')
 		
+			
 		#save plot
 		plt.subplots_adjust(hspace=0.07)		
 		plt.savefig('Results/XCLASSFit_' + str(cores[j]) + '_' + str(number[j]) + '.pdf', format='pdf', bbox_inches='tight')
@@ -1086,5 +1102,291 @@ def run_XCLASS_fit_all_fixed(data_directory,working_directory,regions, filenames
 	os.system('casa -c XCLASS_optical_depth.py')
 	rm_casa_files()
 	
-	#plot_fit_residuals_optical_depth(cores, number,std_line)
+	plot_fit_residuals_optical_depth(cores, number,std_line)
+	
+def compute_T_kin(core,nr):
+	###extract the kinetic temperature
+	
+	#load table with fit parameter results
+	fit_results = np.loadtxt('Results/Results_' + str(core) + '_' + str(nr) + '.dat', dtype='U', comments='#')
+	
+	#extract molecule tag & column density
+	molecule = fit_results[:,0].astype(np.str)
+	T = fit_results[:,2].astype(np.str)
+	
+	mask_CH3CN, = np.where(molecule == ['CH3CN'])
+	mask_HNCO, = np.where(molecule == ['HNCO'])
+	mask_H2CO, = np.where(molecule == ['H2CO'])
+	
+	if T[mask_CH3CN] != 'nan':
+		
+		T_kin = T[mask_CH3CN].astype(np.float)
+		
+	elif T[mask_HNCO] != 'nan':
+		
+		T_kin = T[mask_HNCO].astype(np.float)
+		
+	elif T[mask_H2CO] != 'nan':
+		
+		T_kin = T[mask_H2CO].astype(np.float)
+	
+	else:
+		
+		T_kin = 10.0
+
+	return T_kin
+	
+def determine_H2_col_dens(data_directory,regions,distances,cores,number,x_pix, y_pix):
+	###determine H2 column density from dust continuum	
+	
+	#Constants
+	h = 6.626 * 10.0 ** (-34.0) #J * s
+	k = 1.38 * 10.0 ** (-23.0) #J/K
+	c_m_s = 299792458.0 # m/s
+	gasdustratio = 150.0
+	mu = 2.8
+	m_H = 1.67 * 10.0**(-24.0) # in g
+	kappa = 0.9 #g/(cm^2)
+	
+	#create empty H2 column density and mass arrays
+	N_H2 = np.zeros(cores.size)
+	M = np.zeros(cores.size)
+	T_kin = np.zeros(cores.size)
+	
+	#loop over all cores
+	for j in range(cores.size):
+		
+		#open continuum data		
+		hdu = fits.open(data_directory + 'cont_' + cores[j]+ '_1mm_selfcal.fits')[0]
+		
+		#extract flux at position
+		flux = hdu.data # in Jy
+		data = flux[0,y_pix[j],x_pix[j]]
+		
+		#extract conversion factor
+		delta = hdu.header['CDELT2'] * 3600.0 #arcsec/pixel
+		
+		#extract beam properties
+		bmin = hdu.header['BMIN'] * 3600.0 #arcsec
+		bmaj = hdu.header['BMAJ']* 3600.0 #arcsec
+		
+		#extract rest-frequency
+		frequency = hdu.header['RESTFREQ']
+		
+		#compute beam area in steradian
+		beam_FWHM = bmin*bmaj #arcsec
+		beam_FWHM_rad = beam_FWHM / (206265.0**2) #radian
+		beam = beam_FWHM_rad * np.pi / (4.0 * np.log(2.0)) #steradian
+		
+		#convert Jy/beam to Jy/pixel
+		Jy_beam_to_Jy_pixel = delta*delta/(1.1331*beam_FWHM) #convert Jansky/beam to Jansky/pixel
+		
+		#compute distance in m
+		mask_reg, = np.where(regions == cores[j])[0]
+		distance = distances[mask_reg]
+		distance = distance * 10.0**3.0 * 3.086 * 10.0**16.0 # in m
+		
+		#extract kinetic temperature
+		T = compute_T_kin(cores[j],number[j])
+		T_kin[j] = T
+		
+		#compute Planck function
+		planck = 2.0 * h * frequency ** 3.0 / (c_m_s**2.0 * (np.exp(h * frequency /(k * T)) -1.0))
+		
+		#compute H2 column density
+		N_H2[j] = data * 10**(-26.0) * gasdustratio / (beam * kappa * planck * mu * m_H) #cm-2
+		
+		#compute mass
+		M[j] = Jy_beam_to_Jy_pixel * 10**4*data * 10**(-26.0) * gasdustratio * distance**2.0 / (kappa * planck) / (1.988*10.0**33) #M_sun
+		
+	np.savetxt('Results/Physical_Properties.dat', np.c_[cores,number,T_kin,N_H2,M], delimiter=' ', fmt='%s')
+	
+	return T_kin, N_H2, M
+	
+	
+def create_MUSCLE_input(data_directory,regions, distances, filenames, cores, number, mol_name_MUSCLE,N_H2):
+	###create MUSCLE input files
+
+	#correct format of H2 column density
+	N_H2 = ["%.2E" % i for i in N_H2]
+	
+	#load distances to galactic center
+	d_to_GC = np.loadtxt('Results/GalacticDistances.dat',usecols=1)
+	
+	#loop over all cores
+	for j in range(cores.size):
+		
+		#mask out region
+		mask_reg, = np.where(regions == cores[j])[0]
+		
+		#extract distance
+		d = d_to_GC[mask_reg]
+		ratio = oxygen_16_18_ratio(d)
+		print(cores[j] + ' ' + str(number[j]))
+		print(ratio)
+		
+		#load datacube
+		hdu = fits.open(data_directory + filenames[mask_reg])[0]
+		
+		#get beam major and minor axis and frequency resolution
+		bmin = hdu.header['BMIN'] * 3600.0 #arcsec
+		bmaj = hdu.header['BMAJ']* 3600.0 #arcsec
+		
+		#create average beam FWHM
+		beam_avg = (bmin + bmaj ) / 2.0
+		
+		#compute beam radius in AU
+		beam_rad = np.around(beam_avg*d*10.0**3.0,decimals=1)
+
+		#load table with fit parameter results
+		fit_results = np.loadtxt('Results/Results_' + str(cores[j]) + '_' + str(number[j]) + '.dat', dtype='U', comments='#')
+		
+		#extract molecule tag & column density
+		molecule = fit_results[:,0].astype(np.str)
+		N = fit_results[:,3].astype(np.str)
+		
+		#mask out bad fits
+		mask, = np.where(N != 'nan')
+		N = N[mask].astype(np.float)
+		molecule = molecule[mask]
+		model_name = mol_name_MUSCLE[mask]
+		
+		#mask out molecules which do not have an muscle input
+		mask2 = np.where(model_name != 'None')
+		molecule = molecule[mask2]
+		model_name = model_name[mask2]
+		N = N[mask2]
+		
+		#create empty array for MUSCLE file input
+		NAME = np.zeros(N.size).astype(np.str)
+		COLDENS = np.zeros(N.size)
+		
+		#loop over all fitted molecules
+		for i in range(N.size):
+			
+			#find all positions of that molecule
+			count_arr, = np.where(model_name == model_name[i])
+			counter = count_arr.size
+			
+			#copy results if only one entry
+			if counter == 1:
+				
+				#compute CO column density with C18O isotopologue
+				if model_name[i] =='C18O':
+					
+					NAME[i] = 'CO'
+					COLDENS[i] = N[i] * ratio
+				
+					
+				else:
+					NAME[i] = model_name[i]
+					COLDENS[i] = N[i]
+					
+			#create average if multiple transitions were fitted
+			if counter > 1:
+				
+				N_arr = N[count_arr]
+				
+				NAME[count_arr[0]] = model_name[i]
+				
+				for k in range(1,counter):
+					NAME[count_arr[k]] = 'None'
+				
+				COLDENS[i] = np.sum(N_arr) / 2.0
+				
+			#do nothing if there is no MUSCLE input
+			if counter == 0:
+				print("Zero entries")
+				
+				
+		#mask out positions with no content
+		mask3 = np.where(NAME != 'None')
+		NAME = NAME[mask3]
+		COLDENS = COLDENS[mask3]
+		
+		#change format for column density
+		COLDENS = ["%.2E" % i for i in COLDENS]
+		
+		total = NAME.size + 2
+		#write results in file
+		file = open('Results/Model_Input_' + str(cores[j]) + '_' + str(number[j]) + '.dat','w') 
+		file.write(
+	"""        Species       N(cm^-2)     error        radius(AU) det lim    nul\n"""
++ str(total) + """ \n"""  
+"""det     H2            """ + str(N_H2[j]) + """   0.00E+00       """ + (""" """)*(6-len(str(beam_rad))) + str(beam_rad) + """      1    0     0      
+det     H2            """ + str(N_H2[j]) + """   0.00E+00       """ + (""" """)*(6-len(str(beam_rad))) + str(beam_rad) + """      1    0     0\n"""
+		)
+		
+		for o in range(NAME.size):
+			file.write(      
+	"""det     """ + NAME[o] + (""" """)*(14-len(NAME[o])) + COLDENS[o] + """   0.00E+00       """ + (""" """)*(6-len(str(beam_rad))) + str(beam_rad) + """      1    0     0\n"""
+			)
+		file.close() 
+	
+	
+def plot_fit(cores, number):
+	###plot observed spectrum + fit
+	
+	#plotting parameters
+	plt.rcParams.update(params)
+	
+	std_line = np.loadtxt('Results/Noise.dat',usecols=2,delimiter=' ')
+		
+	#loop over all cores
+	for j in range(cores.size):
+		
+		#load table with line properties	
+		trans_tab =np.loadtxt('Results/' + str(cores[j]) + '_' + str(number[j]) + '_transition_energies.dat',dtype='U',comments='%')
+		if trans_tab.ndim > 1:
+			freq = trans_tab[:,0].astype(np.float)/1000.0 #GHz
+			molec = trans_tab[:,7].astype(np.str) #Molecule label
+			intensity = trans_tab[:,2].astype(np.float)
+			
+			#mask out nonfitted lines
+			mask = np.where(intensity > 5.0*std_line[j])
+			freq = freq[mask]
+			molec = molec[mask]
+			
+		else:
+			freq = np.array(trans_tab[0].astype(np.float)/1000.0) #GHz
+			molec = np.array(trans_tab[7].astype(np.str)) #Molecule label
+			intensity = np.array(trans_tab[2].astype(np.float))
+	
+		#load observed spectrum
+		data = np.loadtxt('FITS/spectrum_' + str(cores[j]) + '_' + str(number[j]) + '.dat')
+		X = data[:,0] / 1000.0
+		Y = data[:,1]		
+		
+		#load model spectrum
+		fit = np.loadtxt('FITS/BESTFIT_spectrum_' + str(cores[j]) + '_' + str(number[j]) + '_compl.out.dat')
+		X_fit = fit[:,0] / 1000.0
+		Y_fit = fit[:,1]
+		
+		#plot spectrum & fit
+		plt.ioff()
+		plt.figure(1) 
+		ax = plt.subplot(111)
+		plt.plot(X,Y,'k', label='Observed Flux Density',lw=0.5)
+		plt.plot(X_fit,Y_fit,'r', label='XCLASS Fit',lw=0.5,alpha=0.8)
+		plt.xlim(float(min(X))-0.02, max(X)+0.02)
+		xmajor = MultipleLocator(0.5)
+		ax.xaxis.set_major_locator(xmajor)
+		xminor = MultipleLocator(0.1)
+		ax.xaxis.set_minor_locator(xminor)
+		plt.ylabel('Brightness Temperature [K]')
+		plt.xlabel('Frequency [GHz]')
+		plt.ticklabel_format(useOffset=False)
+		plt.legend(loc='upper left')
+
+		#label fitted lines
+		if trans_tab.ndim > 1:
+			for i in range(0, freq.size):
+				plt.annotate(molec[i], xy=(freq[i], 0.0), xytext=(freq[i], np.amax(Y)*1.25), arrowprops=dict(arrowstyle='-', relpos=(0,0),alpha=0.1, color='blue',linewidth=0.5), fontsize=5, rotation = 90, alpha=1.0, color='blue')
+		else:
+			plt.annotate(molec, xy=(freq, 0.0), xytext=(freq, np.amax(Y)*1.25), arrowprops=dict(arrowstyle='-', relpos=(0,0),alpha=0.1, color='blue',linewidth=0.5), fontsize=5, rotation = 90, alpha=1.0, color='blue')
+		
+			
+		#save plot
+		plt.savefig('Results/XCLASSFit_' + str(cores[j]) + '_' + str(number[j]) + '_single.pdf', format='pdf', bbox_inches='tight')
+		plt.close()		
 	
