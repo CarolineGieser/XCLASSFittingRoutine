@@ -18,9 +18,11 @@ for j in range(cores.size):
 	experimentalData = str(working_directory) + "FITS/observation_" + str(cores[j]) + "_" + str(number[j]) + "_vLSR.xml"
 	AlgorithmXMLFile = str(working_directory) + "algorithm.xml"
 	
-	#perform XCLASS Fit on C18O line	
+	#perform XCLASS Fit on specific line	
 	newmolfit, modeldata, JobDir = myXCLASSFit() 
 	
 	#copy results from XCLASS default directory to working directory
 	os.system('scp -rp ' + JobDir + 'spectrum_' + str(cores[j]) + '_' + str(number[j]) + '.LM__call_1.out.dat ' + str(working_directory) + 'FITS/BESTFIT_spectrum_' + str(cores[j]) + '_' + str(number[j]) + '_vLSR.out.dat')
-	os.system('scp -rp ' + JobDir + 'molecules_vLSR__LM__call_1.out.molfit ' + str(working_directory) + 'FITS/BESTFIT_molecules_' + str(cores[j]) + '_' + str(number[j]) + '_vLSR.molfit')           
+	os.system('scp -rp ' + JobDir + 'molecules_vLSR__LM__call_1.out.molfit ' + str(working_directory) + 'FITS/BESTFIT_molecules_' + str(cores[j]) + '_' + str(number[j]) + '_vLSR.molfit')     
+	
+exit      

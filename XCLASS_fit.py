@@ -15,7 +15,6 @@ number = cores_tab[:,1].astype(np.int)
 mol_data=np.loadtxt('molecules.dat', dtype='U', comments='%')
 mol_name_file=mol_data[:,1] #plotted molecule label
 
-
 input_tab=np.loadtxt('input.dat', dtype='U', comments='#').astype(np.str)
 do_error_estimation = input_tab[1,1]
 
@@ -42,9 +41,7 @@ for z in range(tag.size):
 			newmolfit, modeldata, JobDir = myXCLASSFit() 
 			
 			#copy results from XCLASS default directory to working directory
-			os.system('scp -rp ' + JobDir + 'spectrum_' + str(cores[j]) + '_' + str(number[j]) + str(tag[z]) + '.LM__call_1.out.dat ' + str(working_directory) + 'FITS/BESTFIT_spectrum_' + str(cores[j]) + '_' + str(number[j]) + '_' + str(mol_name_file[k]) + str(tag[z]) + '.out.dat')
+			os.system('scp -rp ' + JobDir + 'spectrum_' + str(cores[j]) + '_' + str(number[j]) + str(tag[z]) + '_vLSRcorr.LM__call_1.out.dat ' + str(working_directory) + 'FITS/BESTFIT_spectrum_' + str(cores[j]) + '_' + str(number[j]) + '_' + str(mol_name_file[k]) + str(tag[z]) + '.out.dat')
 			os.system('scp -rp ' + JobDir + 'molecules_' + str(mol_name_file[k]) + '__LM__call_1.out.molfit ' + str(working_directory) + 'FITS/BESTFIT_molecules_' + str(cores[j]) + '_' + str(number[j]) + '_' + str(mol_name_file[k]) + str(tag[z]) + '.molfit')           
-	
-	
-	
-	 
+
+exit

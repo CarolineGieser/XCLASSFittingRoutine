@@ -1,0 +1,5 @@
+        Species       N(cm^-2)     error        radius(AU) det lim    nul
+3 
+det     H2            3.00E+25   0.00E+00       3446.9      1    0     0      
+det     H2            3.00E+25   0.00E+00       3446.9      1    0     0
+det     CO            1.61E+20   0.00E+00       3446.9      1    0     0

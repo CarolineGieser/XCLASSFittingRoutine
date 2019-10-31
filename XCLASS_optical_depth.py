@@ -2,6 +2,8 @@ import numpy as np
 from astropy.io import fits
 import os
 
+c = 299792.458 #km/s
+
 #get working directory 
 working_directory = os.getcwd() + "/"
 
@@ -33,7 +35,10 @@ for j in range(cores.size):
 	#get beam major and minor axis and frequency resolution
 	bmin = hdu.header['BMIN'] * 3600.0 #arcsec
 	bmaj = hdu.header['BMAJ']* 3600.0 #arcsec
-	delta_nu = hdu.header['CDELT3'] #MHz
+	#get rest-frequency of observations
+	restfreq = hdu.header['RESTFREQ'] #Hz
+	#calculate frequency spectral resolution in MHz
+	delta_nu = restfreq * np.abs(hdu.header['CDELT3']) / (c * 10.0**9.0) #MHz
 	
 	#create average beam FWHM
 	beam_avg = (bmin + bmaj ) / 2.0
@@ -63,7 +68,7 @@ for j in range(cores.size):
 	####copy results from XCLASS default directory to working directory:
 	
 	#transition energies
-	os.system('scp -rp ' + jobDir + 'transition_energies.dat Results/' + str(cores[j]) + '_' + str(number[j]) + '_transition_energies.dat')
+	os.system('scp -rp ' + jobDir + 'transition_energies.dat FITS/' + str(cores[j]) + '_' + str(number[j]) + '_transition_energies.dat')
 	
 	
 	#get list of all files 
@@ -77,11 +82,11 @@ for j in range(cores.size):
 		if fnmatch.fnmatch(tau_file, pattern):
 			
 				#copy optical depth file to working directory
-				os.system('scp -rp ' + jobDir + tau_file + ' Results/' + str(cores[j]) + '_' + str(number[j]) + '_' + tau_file)
+				os.system('scp -rp ' + jobDir + tau_file + ' FITS/' + str(cores[j]) + '_' + str(number[j]) + '_' + tau_file)
 				
 				
 				
-				
+exit		
 				
 				
 				

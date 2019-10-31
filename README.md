@@ -35,13 +35,6 @@ automatically performs XCLASS Fit on spectra from a given sample and given molec
 
 
 ## Required Input
-**input.dat**:
-*Some input variables*
-- first column: directory in which fits datacubes are stored (var: **data_directory**)
-- second column: perform error estimation (yes/no)? (var: **do_error_estimation**)
-- third column: channel where noise computation should start (var: **channel1**)
-- fourth column: channel where noise computation should stop (var: **channel2**)
-
 **regions.dat**:  
 *Table of regions*  
 more than 1 entry is required (just copy line if only 1 region is analyzed!)
@@ -71,12 +64,11 @@ more than 1 molecule is required!
 - third column: MUSCLE label which will be used for computing the model input
 - fourth column: molecule label which will be used for plotting
 
-**molecule_ranges.dat**:
-*Table of frequency ranges for the fitted molecules*
+**molecule_lines.dat**:
+*Table of rest frequencies for the fitted molecules*
 
 Each molecule needs to have at least 1 frequency range!
-Multiple frequency ranges for a molecule are also possible!
+Multiple frequencies for a molecule are also possible!
 
-- first column: XCLASS label of the molecule (var: **mol_ranges_name**)
-- second column: lower frequency in MHz (var: **mol_ranges_low**)
-- third column: upper frequency in MHz (var: **mol_ranges_upp**)
+- first column: XCLASS label of the molecule (var: **mol_lines_name**)
+- second column: rest frequency in MHz (var: **mol_lines_freq**)

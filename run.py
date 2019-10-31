@@ -3,49 +3,89 @@ import functs as fc
 import os
 import numpy as np
 
-#load input tables
-data_directory, do_error_estimation, channel1 , channel2 = fc.load_input_table()
-regions, regions_plot, distances, filenames, filenames_continuum = fc.load_regions_table()
-cores, number, x_pix, y_pix, core_label = fc.load_cores_table()
-mol_name, mol_name_file, mol_name_MUSCLE, mol_name_plot = fc.load_molecules_table()
-mol_ranges_name, mol_ranges_low, mol_ranges_upp = fc.load_molecule_ranges_table()
+### INPUT ###
+#directory where fits datacubes are stored
+#absolute or relative path
+data_directory = '../CORESample/DATA/'
+
+#error estimation for XCLASS fit parameters? 
+#'yes' or 'no'
+do_error_estimation = 'yes'
+
+#line-free channel range in which noise is determined in each spectrum [start:stop]
+freq_low=219000.0
+freq_upp=219130.0
+
+#specific line for vlsr determination
+#(otherwise set vlsr_corr=False, vlsr_molec='',vlsr_freq=np.nan to use general region value from datacube)
+#True or False
+vlsr_corr=True
+#XCLASS molecule name
+vlsr_molec='CO-18;v=0;'
+#rest frequency of specific line
+vlsr_freq=219560.0
+###REQUIRED INPUT ###
 
 
+#fit isotopologues simultaneously:
+#has to be added in create_XCLASS_isoratio_file() function in functs.py
+
+### LOADING INPUT AND SETTING UP DIRECTORIES ###
 #setup working directory
 working_directory = fc.setup_directory(delete_previous_results=False)
+fc.create_input_table(data_directory,do_error_estimation,freq_low,freq_upp)
+
+### CONTINUUM DATA ###
 
 #continuum plots
-contfc.plot_continuum()
+contfc.plot_continuum(data_directory)
+
+### SETTING UP XCLASS FILES ###
 
 #determine noise in spectra
-std_line = fc.determine_noise(data_directory, regions, filenames, cores, number, x_pix, y_pix,channel1,channel2)
+#fc.determine_noise(data_directory,freq_low,freq_upp)
 
 #extract spectra
-fc.extract_spectrum_init(data_directory, regions, filenames, cores, number, x_pix, y_pix)
+#fc.extract_spectrum_init(data_directory)
 	
 #create XCLASS input files
-fc.setup_XCLASS_files(data_directory, working_directory, regions, filenames, distances, cores, number, x_pix, y_pix, mol_name,mol_name_file,mol_ranges_name, mol_ranges_low, mol_ranges_upp, do_error_estimation)
+#fc.setup_XCLASS_files(data_directory, working_directory,do_error_estimation,vlsr_molec,vlsr_freq)
+
+### RUN XCLASS AND EXTRACT FIT PARAMETERS ###
 
 #run XCLASS Fit
-fc.run_XCLASS_fit(data_directory, regions, filenames,cores, number, x_pix, y_pix,std_line,do_error_estimation,C18O_vlsr=True)
+#fc.run_XCLASS_fit(data_directory,do_error_estimation,vlsr_corr,vlsr_molec,vlsr_freq)
 
-#extract fit results and plot results
-fc.create_plots(cores, number, mol_name_file,std_line,do_error_estimation)
+#extract all best fit parameters and save tables
+#fc.extract_results(do_error_estimation,plotting=True,flagging=False)
+
+### CREATE PLOTS AND EXTRACT RESULTS ###
+#plot results (histograms and barcharts)
+#fc.create_plots(do_error_estimation)
 
 #compute total fit spectrum
-fc.run_XCLASS_fit_all_fixed(data_directory,working_directory,regions, filenames,cores, number,mol_name,mol_name_file,mol_ranges_name, mol_ranges_low, mol_ranges_upp,std_line,do_error_estimation)
+#fc.run_XCLASS_fit_all_fixed(data_directory,working_directory,do_error_estimation,vlsr_molec,vlsr_freq)
 
 #compute H2 column density and mass from continuum
-T_kin, N_H2, M = fc.determine_H2_col_dens(data_directory,regions,distances,cores,number,x_pix, y_pix)
+#fc.determine_H2_col_dens(data_directory,do_error_estimation)
 
-#create MUSCLE input files
-fc.create_MUSCLE_input(data_directory,regions, distances, filenames, cores, number, mol_name_MUSCLE,N_H2)
-
-#create plot with observed + fitted spectrum, residuals, and optical depth
-fc.plot_fit_residuals_optical_depth(cores, number, std_line)
-
+##create MUSCLE input files
+#fc.create_MUSCLE_input(data_directory)
+	
 #create plot with observed + fitted spectrum
-fc.plot_fit(cores, number)
+#fc.plot_fit()
+
+#fc.abundance_analysis(do_error_estimation)
+
+
+
+
+
+
+
+
+
+
 
 
 

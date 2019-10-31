@@ -22,4 +22,6 @@ for j in range(cores.size):
 	newmolfit, modeldata, JobDir = myXCLASSFit() 
 	
 	#copy results from XCLASS default directory to working directory
-	os.system('scp -rp ' + JobDir + 'spectrum_' + str(cores[j]) + '_' + str(number[j]) + '.LM__call_1.out.dat ' + str(working_directory) + 'FITS/BESTFIT_spectrum_' + str(cores[j]) + '_' + str(number[j]) + '_compl.out.dat')
+	os.system('scp -rp ' + JobDir + 'spectrum_' + str(cores[j]) + '_' + str(number[j]) + '_vLSRcorr.LM__call_1.out.dat ' + str(working_directory) + 'FITS/BESTFIT_spectrum_' + str(cores[j]) + '_' + str(number[j]) + '_compl.out.dat')
+	
+exit
