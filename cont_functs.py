@@ -7,8 +7,6 @@ from matplotlib.patches import Ellipse
 from matplotlib import ticker
 import functs as fc
 
-data_directory, do_error_estimation, channel1 , channel2 = fc.load_input_table()
-
 params = {'font.family' : 'serif',
 			 'font.size' : 12,
 			 'errorbar.capsize' : 3,
