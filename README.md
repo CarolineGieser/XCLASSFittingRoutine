@@ -50,7 +50,6 @@ spectral uniz of the fits data cubes: Hz
 *Table of rest frequencies for the fitted molecules*
 
 Each molecule needs to have at least 1 frequency range!
-Multiple frequencies for a molecule are also possible!
 
-- first column: XCLASS label of the molecule (var: **mol_lines_name**)
-- second column: rest frequency in MHz (var: **mol_lines_freq**)
+- column 1: XCLASS name of the molecule (may contain special characters)
+- column 2: rest frequency in MHz
