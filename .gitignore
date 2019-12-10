@@ -1,12 +1,9 @@
-Analysis/
 *~
 __pycache__/
+RESULTS/
 PLOTS/
 FITS/
-Results/
 *.last
 *.log
 .directory
-Test/
-test.py
 
