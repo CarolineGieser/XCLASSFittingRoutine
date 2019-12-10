@@ -1,0 +1,17 @@
+data_directory Example_DATA/
+do_error_estimation yes
+freq_low 218600.0
+freq_upp 218700.0
+vlsr_corr True
+vlsr_molec HCCCN;v=0;
+vlsr_freq 218324.788
+sourcesize_low 0.1
+sourcesize_upp 1.0
+temperature_low 5.0 
+temperature_upp 300.0
+columndensity_low 1.0E12.0
+columndensity_upp 1.0E19.0
+linewidth_low 0.5
+linewidth_upp 15.0
+velocityoffset_low -6.0
+velocityoffset_upp 6.0

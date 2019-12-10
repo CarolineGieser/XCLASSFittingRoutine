@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<FitControl>
+    <!-- settings for fit process -->
+
+
+    <!-- set number of used algorithms -->
+    <NumberOfFitAlgorithms>2</NumberOfFitAlgorithms>
+
+
+    <!-- define settings for 1st algorithm -->
+    <algorithm>
+        <FitAlgorithm>genetic</FitAlgorithm>
+
+
+        <!-- special settings for genetic algorithm -->
+
+
+        <!-- use new ranges: yes (defualt), no -->
+        <UseNewRange>no</UseNewRange>
+
+
+        <!-- define number of chromosomes: automatic (default), > 0 -->
+        <NumberChromosomes>automatic</NumberChromosomes>
+
+
+        <!-- BestSiteCounter (number of best sites) > 0 -->
+        <BestSiteCounter>1</BestSiteCounter>
+
+
+        <!-- set max. number of iterations -->
+        <number_iterations>50</number_iterations>
+
+
+        <!-- set max. number of processors -->
+        <NumberProcessors>8</NumberProcessors>
+
+
+        <!-- set path and name of host file -->
+        <MPIHostFileName> </MPIHostFileName>
+
+
+        <!-- settings for chi^2 -->
+        <limit_of_chi2>1e-5</limit_of_chi2>
+        <RenormalizedChi2>yes</RenormalizedChi2>
+        <DeterminationChi2>default</DeterminationChi2>
+        <SaveChi2>yes</SaveChi2>
+
+
+        <!-- set plot options -->
+        <PlotAxisX>Rest Frequency [MHz]</PlotAxisX>
+        <PlotAxisY>T_mb [K]</PlotAxisY>
+        <PlotIteration>no</PlotIteration>
+    </algorithm>
+
+
+    <!-- define settings for 2nd algorithm -->
+    <algorithm>
+        <FitAlgorithm>Levenberg-Marquardt</FitAlgorithm>
+
+
+        <!-- set max. number of iterations -->
+        <number_iterations>50</number_iterations>
+
+
+        <!-- set max. number of processors -->
+        <NumberProcessors>8</NumberProcessors>
+
+
+        <!-- set path and name of host file -->
+        <MPIHostFileName> </MPIHostFileName>
+
+
+        <!-- settings for chi^2 -->
+        <limit_of_chi2>1e-6</limit_of_chi2>
+        <RenormalizedChi2>yes</RenormalizedChi2>
+        <DeterminationChi2>default</DeterminationChi2>
+        <SaveChi2>yes</SaveChi2>
+
+
+        <!-- set plot options -->
+        <PlotAxisX>Rest Frequency [MHz]</PlotAxisX>
+        <PlotAxisY>T_mb [K]</PlotAxisY>
+        <PlotIteration>no</PlotIteration>
+    </algorithm>
+
+
+    <!-- define settings for 3rd algorithm -->
+  
+</FitControl>
+
