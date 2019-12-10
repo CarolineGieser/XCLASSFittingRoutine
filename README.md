@@ -9,18 +9,17 @@ T. Möller, C. Endres, and P. Schilke, "eXtended CASA Line Analysis Software Sui
 
 
 **execute routine with "python3 run.py" in terminal**
-
-
 ## Required Packages
 *The routine has been tested successfully using the following packages:*
 
-- casa 5.4.0 (with python 2.7.14)
+- casa 5.4.0-68 (with IPython 5.1.0)
 - python 3.6.5
 - XCLASS 1.2.5
 - numpy 1.16.3
-- astropy (python3: 3.1.2)
+- astropy (python3: 3.2.3)
 - spectralcube 0.4.4
 - matplotlib 3.0.3
+- os
 
 
 ## Required Input
