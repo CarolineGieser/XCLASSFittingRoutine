@@ -139,7 +139,7 @@ def load_regions_table():
 	#### input table of regions
 	
 	#load table
-	regions_tab=np.loadtxt('Input/regions.dat', dtype='U', comments='#')
+	regions_tab=np.loadtxt('Input/regions.dat', dtype='U', comments='#',ndmin=2)
 	
 	#region name
 	regions = regions_tab[:,0].astype(np.str) 
@@ -153,7 +153,7 @@ def load_cores_table():
 	#### input table of cores
 	
 	#load table
-	cores_tab=np.loadtxt('Input/cores.dat', dtype='U', comments='#')
+	cores_tab=np.loadtxt('Input/cores.dat', dtype='U', comments='#',ndmin=2)
 	
 	#region name
 	cores = cores_tab[:,0].astype(np.str)
@@ -171,7 +171,7 @@ def load_molecules_table():
 	### input table of molecules
 	
 	#load table
-	mol_tab=np.loadtxt('Input/molecules.dat', dtype='U', comments='%')
+	mol_tab=np.loadtxt('Input/molecules.dat', dtype='U', comments='%',ndmin=2)
 	
 	#XCLASS molecule label
 	mol_names_XCLASS = mol_tab[:,0].astype(np.str)
@@ -185,7 +185,7 @@ def load_molecule_lines_table():
 	### input table of molecule lines to fit
 	
 	#load table
-	mol_lines_tab=np.loadtxt('Input/molecule_lines.dat', dtype='U', comments='%')
+	mol_lines_tab=np.loadtxt('Input/molecule_lines.dat', dtype='U', comments='%',ndmin=2)
 	
 	#XCLASS molecule label
 	mol_lines_name=mol_lines_tab[:,0]
@@ -338,7 +338,7 @@ def create_XCLASS_molfits_file(method):
 		file = open('FITS/molecules_vLSR.molfit','w') 
 		file.write(
 vlsr_molec + """   1 \n"""
-"""y   0.1   1.0   0.4   y   5.0   300.0   100.0   y   1.0E+12   1.0E+19   1.0e+15   y   0.5   15.0   5.0   y   -15.0   15.0   0.0   c"""
+"""y   """ + sourcesize_low + """   """ + sourcesize_upp + """   0.4   y   """ + temperature_low + """   """ + temperature_upp + """   100.0   y   """ + columndensity_low + """   """ + columndensity_upp + """   1.0e+15   y   """ + linewidth_low + """   """ + linewidth_upp + """   5.0   y   -15.0   15.0   0.0   c"""
 		)
 		file.close()
 
@@ -352,7 +352,7 @@ vlsr_molec + """   1 \n"""
 			file = open('FITS/molecules_' + str(mol_names_file[k]) + '.molfit','w') 
 			file.write(
 mol_names_XCLASS[k] +"""   1 \n"""
-"""y   0.1   1.0   0.4   y   5.0   300.0   100.0   y   1.0E+12   1.0E+19   1.0e+15   y   0.5   10.0   5.0   y   -6.0   6.0   0.0   c"""
+"""y   """ + sourcesize_low + """   """ + sourcesize_upp + """   0.4   y   """ + temperature_low + """   """ + temperature_upp + """   100.0   y   """ + columndensity_low + """   """ + columndensity_upp + """   1.0e+15   y   """ + linewidth_low + """   """ + linewidth_upp + """   5.0   y   """ + velocityoffset_low + """   """ + velocityoffset_upp + """   0.0   c"""
 			)
 			file.close()
 					
@@ -369,7 +369,7 @@ mol_names_XCLASS[k] +"""   1 \n"""
 			for k in range(mol_names_XCLASS.size):
 				
 				#load fit results
-				fitdata = np.loadtxt('RESULTS/TABLES/results_' + str(mol_names_file[k]) +'.dat', dtype='U', comments='#')
+				fitdata = np.loadtxt('RESULTS/TABLES/results_' + str(mol_names_file[k]) +'.dat', dtype='U', comments='#',ndmin=2)
 				
 				#source size
 				Theta_source = fitdata[:,2]
@@ -549,7 +549,7 @@ def create_XCLASS_obsxml_file(working_directory,method):
 		for j in range(cores.size):
 			
 			#load spectrum to get upper and lower frequency bounds
-			data_tab = np.loadtxt('FITS/spectrum_' + str(cores[j]) + '_' + str(numbers[j]) + '_vLSRcorr.dat')
+			data_tab = np.loadtxt('FITS/spectrum_' + str(cores[j]) + '_' + str(numbers[j]) + '_vLSRcorr.dat',ndmin=2)
 			#get spectral axis
 			X = data_tab[:,0]
 			
@@ -753,40 +753,15 @@ def rm_casa_files():
 	
 	print('Removed casa log files!')
 	
-	
-def run_XCLASS_fit():
-	### perform XCLASS fit in casa
-	
-	# use specific line to determine precise systemic velocity
-	if vlsr_corr==True:
-		
-		#run inital XCLASS Fit on specific line to determine the vLSR of each core
-		os.system('casa -c Functions/XCLASS_VLSR_determination.py')
-		rm_casa_files()
-		
-		#get velocity offset from specific line fit
-		v_off = get_velocity_offset()
-	
-	# use general region systemic velocity
-	else:
-		v_off = np.zeros(cores.size)
-		
-	#extract spectra & correct for systemic velocity
-	extract_spectrum(v_off)
-		
-	#run XCLASS Fit
-	os.system('casa -c Functions/XCLASS_fit.py')
-	rm_casa_files()
-	
 
-def extract_results(plotting=True):
+def extract_results():
 	###extract best fit parameters from molfit files
 	
 	#set plot parameters
 	plt.rcParams.update(params)
 	
 	#load noise table
-	std_line = np.loadtxt('RESULTS/TABLES/noise.dat', delimiter=' ', usecols=2)	
+	std_line = np.loadtxt('RESULTS/TABLES/noise.dat', delimiter=' ', usecols=2, ndmin=2)	
 	
 	#create empty best fit parameter arrays
 	#source size
@@ -864,65 +839,64 @@ def extract_results(plotting=True):
 			if mol_lines_name_mask.size == 1:
 				n_row = 1
 			
-			#plot results	
-			if plotting == True:
-				
-				#plot spectrum and fit
-				plt.ioff()
-				plt.figure(figsize=(6.0,3.0*n_row)) 
-				
-				#loop over all molecule ranges
-				for p in range(mol_lines_name_mask.size):
-					
-					#create subplot
-					ax = plt.subplot(n_row, 2, p+1)
-					#plot spectrum
-					plt.step(X,Y,'k', label='Data', where='mid')
-					#plot fit
-					plt.step(X_fit,Y_fit,'tab:red', label='Fit',linestyle='dashed', where='mid')
-					
-					#load scaled fitted spectra if error estimation is performed
-					if do_error_estimation == 'yes':
-						
-						#upper error estimation
-						plt.step(X_fit_uppErr,Y_fit_uppErr,'tab:olive', label='upper error',linestyle='dashed', where='mid')
-						#lower error estimation
-						plt.step(X_fit_lowErr,Y_fit_lowErr,'tab:cyan', label='lower error',linestyle='dashed', where='mid')
-					
-					#plot 3 sigma line	
-					plt.axhline(y=3.0*std_line[j], xmin=0, xmax=1,color='tab:green', linestyle=':', label=r'3$\sigma$')
-					
-					#limits in frequency
-					plt.xlim((mol_lines_freq_mask[p]-20.0)/1000.0,(mol_lines_freq_mask[p]+20.0)/1000.0)
-					
-					#annotate y-axis to left panels
-					if p % 2 == 0:
-						plt.ylabel('Brightness Temperature (K)')
-						
-					#annotate x-axis to bottom panels
-					if (p == mol_lines_name_mask.size-1) or (p == mol_lines_name_mask.size-2):
-						plt.xlabel('Rest Frequency (GHz)')
-						
-					#no offset for ticklabels
-					plt.ticklabel_format(useOffset=False)
-					
-					#annotate legend in first panel
-					if p == 0:
-						plt.annotate(str(cores[j]) + ' ' + str(numbers[j]) + ' ' + str(mol_names_XCLASS[k]), xy=(0.1, 1.1), xycoords='axes fraction')  
-					if p == mol_lines_name_mask.size-1:
-						plt.legend(bbox_to_anchor=(0.0, 1.0, 1.9, 0.0),loc='upper right')
-					
-					#mask to fitted frequency range
-					mask, = np.where((X_fit > (mol_lines_freq_mask[p]-20.0)/1000.0) & (X_fit < (mol_lines_freq_mask[p]+20.0)/1000.0))
 
-					#apply ylimits depending on highest brightness temperature in fitted range
-					if mask.size > 0:
+			
+			#plot spectrum and fit
+			plt.ioff()
+			plt.figure(figsize=(6.0,3.0*n_row)) 
+			
+			#loop over all molecule ranges
+			for p in range(mol_lines_name_mask.size):
+				
+				#create subplot
+				ax = plt.subplot(n_row, 2, p+1)
+				#plot spectrum
+				plt.step(X,Y,'k', label='Data', where='mid')
+				#plot fit
+				plt.step(X_fit,Y_fit,'tab:red', label='Fit',linestyle='dashed', where='mid')
+				
+				#load scaled fitted spectra if error estimation is performed
+				if do_error_estimation == 'yes':
+					
+					#upper error estimation
+					plt.step(X_fit_uppErr,Y_fit_uppErr,'tab:olive', label='upper error',linestyle='dashed', where='mid')
+					#lower error estimation
+					plt.step(X_fit_lowErr,Y_fit_lowErr,'tab:cyan', label='lower error',linestyle='dashed', where='mid')
+				
+				#plot 3 sigma line	
+				plt.axhline(y=3.0*std_line[j], xmin=0, xmax=1,color='tab:green', linestyle=':', label=r'3$\sigma$')
+				
+				#limits in frequency
+				plt.xlim((mol_lines_freq_mask[p]-20.0)/1000.0,(mol_lines_freq_mask[p]+20.0)/1000.0)
+				
+				#annotate y-axis to left panels
+				if p % 2 == 0:
+					plt.ylabel('Brightness Temperature (K)')
+					
+				#annotate x-axis to bottom panels
+				if (p == mol_lines_name_mask.size-1) or (p == mol_lines_name_mask.size-2):
+					plt.xlabel('Rest Frequency (GHz)')
+					
+				#no offset for ticklabels
+				plt.ticklabel_format(useOffset=False)
+				
+				#annotate legend in first panel
+				if p == 0:
+					plt.annotate(str(cores[j]) + ' ' + str(numbers[j]) + ' ' + str(mol_names_XCLASS[k]), xy=(0.1, 1.1), xycoords='axes fraction')  
+				if p == mol_lines_name_mask.size-1:
+					plt.legend(bbox_to_anchor=(0.0, 1.0, 1.9, 0.0),loc='upper right')
+				
+				#mask to fitted frequency range
+				mask, = np.where((X_fit > (mol_lines_freq_mask[p]-20.0)/1000.0) & (X_fit < (mol_lines_freq_mask[p]+20.0)/1000.0))
+
+				#apply ylimits depending on highest brightness temperature in fitted range
+				if mask.size > 0:
+					
+					if np.amax(Y_fit[mask]) > 5.0*std_line[j]:
+						plt.ylim(-5.0*std_line[j],np.amax(Y_fit[mask]*2))
 						
-						if np.amax(Y_fit[mask]) > 5.0*std_line[j]:
-							plt.ylim(-5.0*std_line[j],np.amax(Y_fit[mask]*2))
-							
-						else:							
-							plt.ylim(-5.0*std_line[j],10.0*std_line[j])
+					else:							
+						plt.ylim(-5.0*std_line[j],10.0*std_line[j])
 		
 			
 			#empty lists where fitted data is stored in
@@ -950,10 +924,8 @@ def extract_results(plotting=True):
 			if (Y_fit_mask.size > 0) and (np.amax(Y_fit_mask) > 3.0*std_line[j]):
 				
 				#save plot
-				if plotting == True:	
-				
-					plt.savefig('PLOTS/GOODFITS/BESTFIT_spectrum_' + str(cores[j]) + '_' + str(numbers[j]) + '_' + str(mol_names_file[k]) + '.png', format='png', bbox_inches='tight')
-					plt.close()
+				plt.savefig('PLOTS/GOODFITS/BESTFIT_spectrum_' + str(cores[j]) + '_' + str(numbers[j]) + '_' + str(mol_names_file[k]) + '.png', format='png', bbox_inches='tight')
+				plt.close()
 			
 				#load best fit molfits file
 				fit_table = np.loadtxt('FITS/BESTFIT_molecules_' + str(cores[j]) + '_' + str(numbers[j]) + '_' + str(mol_names_file[k]) + '.molfit', dtype='U', skiprows=1) 
@@ -994,11 +966,11 @@ def extract_results(plotting=True):
 			#no flux was recovered from XCLASS fit, set best fit parameters to nan
 			else:
 				
-				if plotting == True:
-					#save plot
-					plt.ylim(-5.0*std_line[j],5*std_line[j])
-					plt.savefig('PLOTS/BADFITS/BESTFIT_spectrum_' + str(cores[j]) + '_' + str(numbers[j]) + '_' + str(mol_names_file[k]) + '.png', format='png', bbox_inches='tight')
-					plt.close()
+
+				#save plot
+				plt.ylim(-5.0*std_line[j],5*std_line[j])
+				plt.savefig('PLOTS/BADFITS/BESTFIT_spectrum_' + str(cores[j]) + '_' + str(numbers[j]) + '_' + str(mol_names_file[k]) + '.png', format='png', bbox_inches='tight')
+				plt.close()
 						
 				#set best fit parameters to nan
 				#source size
@@ -1058,8 +1030,8 @@ def plot_results_cores():
 	for j in range(cores.size):
 		
 		#load table with best fit parameters
-		fit_results = np.loadtxt('RESULTS/TABLES/results_' + str(cores[j]) + '_' + str(numbers[j]) + '.dat', dtype='U', comments='#')
-		
+		fit_results = np.loadtxt('RESULTS/TABLES/results_' + str(cores[j]) + '_' + str(numbers[j]) + '.dat', dtype='U', comments='#',ndmin=2)
+
 		#mask out bad fits
 		T = fit_results[:,2].astype(np.str)
 		mask = np.where(T != 'nan')
@@ -1156,7 +1128,7 @@ def plot_results_molecule():
 	for k in range(mol_names_file.size):
 		
 		#load table with best fit parameters
-		fit_results = np.loadtxt('RESULTS/TABLES/results_' + str(mol_names_file[k]) + '.dat', dtype='U', comments='#')
+		fit_results = np.loadtxt('RESULTS/TABLES/results_' + str(mol_names_file[k]) + '.dat', dtype='U', comments='#',ndmin=2)
 		
 		#mask out bad fits
 		T = fit_results[:,3].astype(np.str)
@@ -1186,22 +1158,22 @@ def plot_results_molecule():
 		ax = plt.subplot(2, 2, 1)
 		#temperature histogram
 		plt.annotate(str(mol_names_XCLASS[k]), xy=(0.1, 1.1), xycoords='axes fraction') 
-		plt.hist(T, range=(0.0,300.0), log=False, color='tab:orange', label=None)
+		plt.hist(T, range=(np.float(temperature_low),np.float(temperature_upp)), log=False, color='tab:orange', label=None)
 		plt.xlabel('Temperature (K)')
 		
 		ax = plt.subplot(2, 2, 2)
 		#column density histogram
-		plt.hist(np.log10(N), range=(12.0,19.0), log=False, color='tab:blue', label=None)
+		plt.hist(np.log10(N), range=(np.log10(np.float(columndensity_low)),np.log10(np.float(columndensity_upp))), log=False, color='tab:blue', label=None)
 		plt.xlabel('log(Column Density) (log(cm$^{-2}$))')
 		
 		ax = plt.subplot(2, 2, 3)
 		#line width histogram
-		plt.hist(delta_v, range=(0.5,15), log=False, color='tab:green', label=None)
+		plt.hist(delta_v, range=(np.float(linewidth_low),np.float(linewidth_upp)), log=False, color='tab:green', label=None)
 		plt.xlabel('Line Width (km s$^{-1}$)')
 		
 		ax = plt.subplot(2, 2, 4)
 		#velocity offset histogram
-		plt.hist(v_off, range=(-6,6), log=False, color='tab:purple', label=None)
+		plt.hist(v_off, range=(np.float(velocityoffset_low), np.float(velocityoffset_upp)), log=False, color='tab:purple', label=None)
 		plt.xlabel('Velocity Offset (km s$^{-1}$)')
 		
 		#adjust space between subplots
@@ -1243,7 +1215,7 @@ def plot_fit():
 	plt.rcParams.update(params)
 	
 	#load noise table
-	std_line = np.loadtxt('RESULTS/TABLES/noise.dat', delimiter=' ', usecols=2)	
+	std_line = np.loadtxt('RESULTS/TABLES/noise.dat', delimiter=' ', usecols=2, ndmin=2)	
 		
 	#loop over all cores
 	for j in range(cores.size):
@@ -1284,3 +1256,58 @@ def plot_fit():
 		#save plot
 		plt.savefig('RESULTS/SPECTRA/XCLASSFit_' + str(cores[j]) + '_' + str(numbers[j]) + '_single.pdf', format='pdf', bbox_inches='tight')
 		plt.close() 
+		
+	print('Created plot for each observed and fitted spectrum!')
+		
+		
+		
+def setup_files(working_directory):
+	
+	determine_noise()
+
+	extract_spectrum_init()
+	
+	setup_XCLASS_files(working_directory)
+	
+	
+def run_fit():
+	### perform XCLASS fit in casa
+	
+	# use specific line to determine precise systemic velocity
+	if vlsr_corr== 'yes':
+		
+		#run inital XCLASS Fit on specific line to determine the vLSR of each core
+		os.system('casa -c Functions/XCLASS_VLSR_determination.py')
+		rm_casa_files()
+		
+		#get velocity offset from specific line fit
+		v_off = get_velocity_offset()
+	
+	# use general region systemic velocity
+	else:
+		v_off = np.zeros(cores.size)
+		
+	#extract spectra & correct for systemic velocity
+	extract_spectrum(v_off)
+		
+	#run XCLASS Fit
+	os.system('casa -c Functions/XCLASS_fit.py')
+	rm_casa_files()
+	
+	
+def analysis(working_directory):
+	
+	extract_results()
+	
+	create_plots()
+	
+	run_XCLASS_fit_all_fixed(working_directory)
+	
+	plot_fit()
+	
+	
+	
+	
+	
+	
+	

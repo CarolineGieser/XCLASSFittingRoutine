@@ -1,24 +1,14 @@
 # XCLASS Fitting Routine
 
 ## Description
-automatically performs XCLASS Fit on spectra from a given sample and given molecules  
+This routine performs XCLASS fits on spectra from a given sample of regions and molecules.
 
-**execute routine with "python3 run.py" in terminal**  
-- for each given position spectra are extracted and the noise is computed in a give line-free channel range
+Information about the XCLASS Software can be found on the following website:
+https://xclass.astro.uni-koeln.de/
+T. Möller, C. Endres, and P. Schilke, "eXtended CASA Line Analysis Software Suite (XCLASS)",A&A 598, A7 (2017), arXiv:1508.04114
 
-- the correct systemic velocity is determined by fitting the C18O line first
 
-- XCLASS is executed for all given molecules
-
-- a fit is considered as "good" if the modeled flux has a peak flux > 5*noise
-
-- error estimation: spectra are scaled by +- 20% and fitted with the same method; for each parameter the error is computed by the mean standard deviation from the best-fit value
-
-- the FITS/ folder contains all extracted spectra and XCLASS input and output files
-
-- the PLOTS/ folder contains plots of the continuum in CONTINUUM/, systemic velocity determination in VLSR/, good XCLASS fits in GOODFIT/, bad XCLASS fits in BADFIT/
-
-- results (XCLASS fitting parameters, barchart and histogram plots) are stored in RESULTS/
+**execute routine with "python3 run.py" in terminal**
 
 
 ## Required Packages
@@ -28,41 +18,34 @@ automatically performs XCLASS Fit on spectra from a given sample and given molec
 - python 3.6.5
 - XCLASS 1.2.5
 - numpy 1.16.3
-- astropy (python3: 3.1.2; python2: 2.0.12)
+- astropy (python3: 3.1.2)
 - spectralcube 0.4.4
 - matplotlib 3.0.3
-- numba 0.43.1
 
 
 ## Required Input
 **regions.dat**:  
 *Table of regions*  
-more than 1 entry is required (just copy line if only 1 region is analyzed!)
-flux unit of the fits data cubes: Kelvin!  
-- first column: region name which will be used for file names (var: **regions**)
-- second column: latex format of region name which will be used in plots (var: **regions_plot**)
-- third column: right ascension (J2000) 
-- fourth column: declination (J2000)
-- fifth column: distance in kpc (var: **distances**)
-- sixth column: .fits filename of the spectral line data of the region (var: **filenames**)
-- seventh column: .fits filename of the continuum data of the region (var: **filenames_continuum**)
+
+flux unit of the fits data cubes: Jy/beam
+spectral uniz of the fits data cubes: Hz
+
+- column 1: name of the region (avoid special characters)
+- column 2: filename of the .fits datacube
 
 **cores.dat**:
 *Table of selected positions within the regions*
-more than 1 position is required!
-- first column: region (var: **cores**)
-- second column: give each position in the region a number (var: **number**)
-- third column: right ascension in pixel units (var: **x_pix**)
-- fourth column: declination in pixel units (var: **y_pix**)
-- fifth column: give positions a classification (e.g., C:"core" or E:"envelope") (var: **core_label**)
+
+- column 1: region (avoid special characters)
+- column 2: number
+- column 3: right ascension (pixel)
+- column 4: declination (pixel)
 
 **molecules.dat**:
 *Table of molecules to be fitted with XCLASS*
-more than 1 molecule is required!
-- first column: XCLASS label of the molecule (var: **mol_name**)
-- second column: molecule label which will be used for file names (var: **mol_name_file**)
-- third column: MUSCLE label which will be used for computing the model input
-- fourth column: molecule label which will be used for plotting
+
+- column 1: XCLASS name of the molecule (may contain special characters)
+- column 2: standard name of the molecule (avoid special characters)
 
 **molecule_lines.dat**:
 *Table of rest frequencies for the fitted molecules*

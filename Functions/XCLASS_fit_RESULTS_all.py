@@ -5,7 +5,7 @@ import os
 working_directory = os.getcwd() + '/'
 
 #### input table of cores
-cores_tab=np.loadtxt(str(working_directory) + 'Input/cores.dat', dtype='U', comments='#')
+cores_tab=np.loadtxt(str(working_directory) + 'Input/cores.dat', dtype='U', comments='#',ndmin=2)
 cores = cores_tab[:,0].astype(np.str)
 numbers = cores_tab[:,1].astype(np.int)
 

@@ -5,12 +5,12 @@ import os
 working_directory = os.getcwd() + '/'
 
 #### input table of cores
-cores_tab=np.loadtxt(str(working_directory) + 'Input/cores.dat', dtype='U', comments='#')
+cores_tab=np.loadtxt(str(working_directory) + 'Input/cores.dat', dtype='U', comments='#',ndmin=2)
 cores = cores_tab[:,0].astype(np.str)
 numbers = cores_tab[:,1].astype(np.int)
 
 #input table of molecules
-mol_data=np.loadtxt(str(working_directory) + 'Input/molecules.dat', dtype='U', comments='%')
+mol_data=np.loadtxt(str(working_directory) + 'Input/molecules.dat', dtype='U', comments='%',ndmin=2)
 mol_names_file=mol_data[:,1] #plotted molecule label
 
 input_tab=np.loadtxt(str(working_directory) + 'Input/init.dat', dtype='U', comments='#').astype(np.str)
