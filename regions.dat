@@ -1,21 +1,3 @@
-#region region_plot distance(kpc) fits_filename luminosity(10^4Lsun) mass(Msun)
-#IRAS23033 IRAS23033 4.3 IRAS23033_widex_selfcal_contsub_robust0p1_clark-merged-pbcor.fits cont_IRAS23033_1mm_selfcal_robust0p1_clark-pbcor.fits 1.7 495
-#IRAS23151 IRAS23151 3.3 IRAS23151_widex_selfcal_contsub_robust0p1_clark-merged-pbcor.fits cont_IRAS23151_1mm_selfcal_robust0p1_clark-pbcor.fits 2.4 215
-#IRAS23385 IRAS23385 4.9 IRAS23385_widex_selfcal_contsub_robust0p1_clark-merged-pbcor.fits cont_IRAS23385_1mm_selfcal_robust0p1_clark-pbcor.fits 1.6 510
-AFGL2591 AFGL2591 3.3 AFGL2591_widex_selfcal_contsub_robust0p1_clark-merged-pbcor.fits cont_AFGL2591_1mm_selfcal_robust0p1_clark-pbcor.fits 20.0 638
-#CEPAHW2 CepAHW2 0.7 CEPAHW2_widex_selfcal_contsub_robust0p1_clark-merged-pbcor.fits cont_CEPAHW2_1mm_selfcal_robust0p1_clark-pbcor.fits 1.5 40
-#G084_9505 G084.9505 5.5 G084_9505_widex_selfcal_contsub_robust0p1_clark-merged-pbcor.fits cont_G084_9505_1mm_selfcal_robust0p1_clark-pbcor.fits 1.3 648
-#G094_6028 G094.6028 4.0 G094_6028_widex_selfcal_contsub_robust0p1_clark-merged-pbcor.fits cont_G094_6028_1mm_selfcal_robust0p1_clark-pbcor.fits 2.8 1525
-#G100_38 G100.38 3.5 G100_38_widex_selfcal_contsub_robust0p1_clark-merged-pbcor.fits cont_G100_38_1mm_selfcal_robust0p1_clark-pbcor.fits 1.5 206
-#G108_75 G108.75 4.3 G108_75_widex_selfcal_contsub_robust0p1_clark-merged-pbcor.fits cont_G108_75_1mm_selfcal_robust0p1_clark-pbcor.fits 1.4 6204
-#G138_2957 G138.2957 2.9 G138_2957_widex_selfcal_contsub_robust0p1_clark-merged-pbcor.fits cont_G138_2957_1mm_selfcal_robust0p1_clark-pbcor.fits 1.4 197
-#G139_9091 G139.9091 3.2 G139_9091_widex_selfcal_contsub_robust0p1_clark-merged-pbcor.fits cont_G139_9091_1mm_selfcal_robust0p1_clark-pbcor.fits 1.1 349
-#G75_78 G075.78 3.8 G75_78_widex_selfcal_contsub_robust0p1_clark-merged-pbcor.fits cont_G75_78_1mm_selfcal_robust0p1_clark-pbcor.fits 11.0 549
-#IRAS21078 IRAS21078 1.5 IRAS21078_widex_selfcal_contsub_robust0p1_clark-merged-pbcor.fits cont_IRAS21078_1mm_selfcal_robust0p1_clark-pbcor.fits 1.3 177
-#NGC7538IRS9 NGC7538IRS9 2.7 NGC7538IRS9_widex_selfcal_contsub_robust0p1_clark-merged-pbcor.fits cont_NGC7538IRS9_1mm_selfcal_robust0p1_clark-pbcor.fits 2.3 214
-#S106 S106 1.3 S106_widex_selfcal_contsub_robust0p1_clark-merged-pbcor.fits cont_S106_1mm_selfcal_robust0p1_clark-pbcor.fits 3.4 47
-#S87IRS1 S87IRS1 2.2 S87IRS1_widex_selfcal_contsub_robust0p1_clark-merged-pbcor.fits cont_S87IRS1_1mm_selfcal_robust0p1_clark-pbcor.fits 2.5 1421
-W3H2O W3H2O 2.0 W3H2O_widex_selfcal_contsub_robust0p1_clark-merged-pbcor.fits cont_W3H2O_1mm_selfcal_robust0p1_clark-pbcor.fits 8.3 307
-#W3IRS4 W3IRS4 2.0 W3IRS4_widex_selfcal_contsub_robust0p1_clark-merged-pbcor.fits cont_W3IRS4_1mm_selfcal_robust0p1_clark-pbcor.fits 4.5 481
-#NGC7538IRS1 NGC7538IRS1 2.7 NGC7538IRS1_widex_selfcal_contsub_robust0p1_clark-merged-pbcor.fits cont_NGC7538IRS1_1mm_selfcal_robust0p1_clark-pbcor.fits 21.0 1570
-#NGC7538S NGC7538S 2.7 NGC7538S_widex_selfcal_contsub_robust0p1_clark-merged-pbcor.fits cont_NGC7538S_1mm_selfcal_robust0p1_clark-pbcor.fits 1.5 238
+AFGL2591 AFGL2591_WideX_ABD_center.fits
+W3H2O W3H2O_WideX_ABD_center.fits
+

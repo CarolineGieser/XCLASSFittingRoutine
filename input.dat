@@ -1,4 +1,0 @@
-data_directory ../CORESample/DATA/
-do_error_estimation yes
-freq_low 219000.0
-freq_upp 219130.0
